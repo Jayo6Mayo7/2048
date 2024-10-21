@@ -2,27 +2,11 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 fun main() {
-    var spawnOne = -1
-    var spawnOneChance = -1
-    var spawnTwo = -1
-    var spawnTwoChance = -1
-    val spawnChange = readln().toBoolean()
-    if (spawnChange) {
-        print("s1: ")
-        spawnOne = readln().toInt()
-        print("s1c: ")
-        spawnOneChance = readln().toInt()
-        print("s2: ")
-        spawnTwo = readln().toInt()
-        print("s2c: ")
-        spawnTwoChance = readln().toInt()
-    }
-    else {
-        spawnOne = 2
-        spawnOneChance = 90
-        spawnTwo = 4
-        spawnTwoChance = 10
-    }
+    var spawnOne = 2
+    var spawnOneChance = 90
+    var spawnTwo = 2
+    var spawnTwoChance = 10
+
     data class OcuSquare(var occupied: Boolean = false, var combined: Boolean = false)
     data class ProtoSquare(var X: Int, var Y: Int)
 
@@ -583,7 +567,7 @@ fun main() {
             repeat(4) {
                 if (squareGrid[x][y].value != -1) {
                     print(squareGrid[x][y].value)
-                } else print("-")git i
+                } else print("-")
                 repeat(5-abs(squareGrid[x][y].value).toString().length) {
                     print(" ")
                 }
@@ -593,20 +577,63 @@ fun main() {
             x = 0
         }
     }
-    print("spawn: ")
-    val spawning = readln().toBoolean()
+    var spawning = true
+    fun toggleSpawning() {
+        spawning = !spawning
+        println("Spawning is now $spawning")
+    }
+    fun setSpawns() {
+        print("s1: ")
+        spawnOne = readln().toInt()
+        print("s1c: ")
+        spawnOneChance = readln().toInt()
+        print("s2: ")
+        spawnTwo = readln().toInt()
+        print("s2c: ")
+        spawnTwoChance = readln().toInt()
+    }
+    fun multiplier() {
+        val multiplierValue = readln().toInt()
+        var x = 0
+        var y = 0
+        repeat(4) {
+            repeat(4) {
+                if (squareGrid[x][y].value > 0) {
+                    squareGrid[x][y].value *= multiplierValue
+                }
+                ++x
+            }
+            ++y
+            x = 0
+        }
+    }
     while (true) {
         if (spawning) {makeSquare()}
         map()
         val yo = readln()
+        //move up
         if (yo == "w" || yo == "up") {metaUp()}
+        //move down
         if (yo == "s" || yo == "down") {metaDown()}
+        //move right
         if (yo == "d" || yo == "right") {metaRight()}
+        //move left
         if (yo == "a" || yo == "left") {metaLeft()}
+        //generates 1 random square
         if (yo == "m" || yo == "make") {makeSquare()}
+        //removes selected square
         if (yo == "r" || yo == "remove") {removeSquare()}
+        //sets value of selected square
         if (yo == "v" || yo == "value") {valueSquare()}
+        //removes all values (i.e. sets all values to -1)
         if (yo == "clear") {clearGrid()}
+        //toggles spawning between true and false (default true)
+        if (yo == "spawning") {toggleSpawning()}
+        //set spawns (default is 90% for 2, 10% for 4)
+        if (yo == "spawns") {setSpawns()}
+        //multiplies all current squares by selectred value
+        if (yo == "multiplier") {multiplier()}
+        //ends program
         if (yo == "stop") {break}
     }
 }
