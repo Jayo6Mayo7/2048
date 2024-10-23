@@ -2,6 +2,7 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 fun main() {
+    println("MAIN")
     var spawnOne = 2
     var spawnOneChance = 90
     var spawnTwo = 2
@@ -69,6 +70,10 @@ fun main() {
         val yInput = readln().toInt()
         val valueInput = readln().toInt()
         squareGrid[xInput][yInput].value = valueInput
+        when (squareGrid[xInput][yInput].value) {
+            -1 -> ocuGrid[xInput][yInput].occupied = false
+            else -> ocuGrid[xInput][yInput].occupied = true
+        }
     }
 
     fun refreshOccupied() {
@@ -568,7 +573,14 @@ fun main() {
                 if (squareGrid[x][y].value != -1) {
                     print(squareGrid[x][y].value)
                 } else print("-")
-                repeat(5-abs(squareGrid[x][y].value).toString().length) {
+                var length = 4
+                if (squareGrid[x][y].value >= 0) {
+                    length = 5 - squareGrid[x][y].value.toString().length
+                }
+                if (squareGrid[x][y].value < -1) {
+                    length = 4 - abs(squareGrid[x][y].value).toString().length
+                }
+                repeat(length) {
                     print(" ")
                 }
                 ++x
