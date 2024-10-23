@@ -2,18 +2,12 @@ import kotlin.random.Random
 fun main() {
     data class MetaSquare(var x: Int, var y: Int, var value: Int, var occupied: Boolean = false, var combined: Boolean = false)
     val metaGrid = MutableList(4) { MutableList(4) { MetaSquare(x = -1, y = -1, value = -1) } }
-    fun makeSquare() {
-        while (true) {
-            val proto = MetaSquare(x = Random.nextInt(0, 4), y = Random.nextInt(0, 4), value = -1)
-            if (!metaGrid[proto.x][proto.y].occupied) {
-                metaGrid[proto.x][proto.y] = MetaSquare(x = proto.x, y = proto.y, value = if (Random.nextInt(1, 10) == 0) {4} else {2}, occupied = true)
-                break
-            }
-        }
-    }
     var change = true
+    fun makeSquare() {
+        val proto = MetaSquare(Random.nextInt(0,4),Random.nextInt(0,4),value = if (Random.nextInt(1, 10) == 0) {4} else {2})
+        if (!metaGrid[proto.x][proto.y].occupied) { metaGrid[proto.x][proto.y] = proto } else {makeSquare()}
+    }
     fun omegaMove(xDif: Int, yDif: Int) {
-        change = false
         var yVar = 0
         repeat(4) {
             var xVar = 0
@@ -21,8 +15,7 @@ fun main() {
                 when (metaGrid[xVar][yVar].value) {
                     -1 -> {metaGrid[xVar][yVar].occupied = false; metaGrid[xVar][yVar].combined = false; ++xVar}
                     else -> {metaGrid[xVar][yVar].occupied = true; metaGrid[xVar][yVar].combined = false; ++xVar}
-                }
-            }
+                } }
             ++yVar
         }
         var x = -1
@@ -57,10 +50,7 @@ fun main() {
                                     metaGrid[metaX][metaY] = MetaSquare(-1,-1,-1, occupied = false)
                                     change = true
                                 }
-                            }
-                        }
-                    }
-                }
+                            } } } }
                 when (xDif) {
                     -1 -> ++x
                     1 -> --x
@@ -68,8 +58,7 @@ fun main() {
                 when (yDif) {
                     -1 -> ++y
                     1 -> --y
-                }
-            }
+                } }
             when (yDif) {
                 -1 -> { ++x; y = 0 }
                 1 -> { --x; y = 3 }
@@ -77,9 +66,7 @@ fun main() {
             when (xDif) {
                 -1 -> { ++y; x = 0 }
                 1 -> { --y; x = 3 }
-            }
-        }
-    }
+            } } }
     fun map() {
         var y = 3
         repeat(4) {
@@ -93,16 +80,11 @@ fun main() {
                 ++x
             }
             --y
-        }
-    }
-    makeSquare()
+        } }
     while (true) {
-        if (change) {map()}
         when (readln()) {
-            "w", "up" ->    { omegaMove(0, 1);  if (change) { makeSquare() } }
-            "s", "down" ->  { omegaMove(0, -1); if (change) { makeSquare() } }
-            "d", "right" -> { omegaMove(1, 0);  if (change) { makeSquare() } }
-            "a", "left" ->  { omegaMove(-1, 0); if (change) { makeSquare() } }
-        }
-    }
-}
+            "w", "up" ->    { omegaMove(0, 1);if (change) { makeSquare(); map(); change = false } }
+            "s", "down" ->  { omegaMove(0, -1);if (change) { makeSquare(); map(); change = false } }
+            "d", "right" -> { omegaMove(1, 0);if (change) { makeSquare(); map(); change = false } }
+            "a", "left" ->  { omegaMove(-1, 0);if (change) { makeSquare(); map(); change = false } }
+        } } }
